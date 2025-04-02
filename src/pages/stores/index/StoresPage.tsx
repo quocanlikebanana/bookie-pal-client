@@ -13,144 +13,20 @@ import {
 	SortAsc
 } from "lucide-react";
 
-interface Store {
-	id: number;
-	name: string;
-	category: string;
-	rating: number;
-	totalReviews: number;
-	address: string;
-	distance: string;
-	image: string;
-	hours: {
-		open: string;
-		close: string;
-		isOpen: boolean;
-	};
-	tags: string[];
-}
-
 const StoresPage: React.FC = () => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [currentCategory, setCurrentCategory] = useState("all");
 
-	const categories = [
-		{ id: "all", name: "All" },
-		{ id: "restaurants", name: "Restaurants" },
-		{ id: "beauty", name: "Beauty & Spa" },
-		{ id: "fitness", name: "Fitness" },
-		{ id: "health", name: "Health" },
-		{ id: "services", name: "Services" }
-	];
-
-	const stores: Store[] = [
-		{
-			id: 1,
-			name: "Ango",
-			category: "beauty",
-			rating: 4.8,
-			totalReviews: 124,
-			address: "123 Main Street, City Center",
-			distance: "0.8 mi",
-			image: "https://placekitten.com/500/300", // Placeholder image
-			hours: {
-				open: "8:00 AM",
-				close: "6:00 PM",
-				isOpen: true
-			},
-			tags: ["Hair Salon", "Massage", "Facial"]
-		},
-		{
-			id: 2,
-			name: "Fitness First",
-			category: "fitness",
-			rating: 4.6,
-			totalReviews: 89,
-			address: "456 Gym Road, Athletic District",
-			distance: "1.2 mi",
-			image: "https://placekitten.com/501/301", // Placeholder image
-			hours: {
-				open: "6:00 AM",
-				close: "10:00 PM",
-				isOpen: true
-			},
-			tags: ["Gym", "Personal Training", "Classes"]
-		},
-		{
-			id: 3,
-			name: "Tasty Bites",
-			category: "restaurants",
-			rating: 4.9,
-			totalReviews: 236,
-			address: "789 Food Street, Culinary Quarter",
-			distance: "0.4 mi",
-			image: "https://placekitten.com/502/302", // Placeholder image
-			hours: {
-				open: "11:00 AM",
-				close: "10:00 PM",
-				isOpen: true
-			},
-			tags: ["Italian", "Pasta", "Pizza"]
-		},
-		{
-			id: 4,
-			name: "Healing Touch",
-			category: "health",
-			rating: 4.7,
-			totalReviews: 56,
-			address: "101 Wellness Way, Health District",
-			distance: "1.5 mi",
-			image: "https://placekitten.com/503/303", // Placeholder image
-			hours: {
-				open: "9:00 AM",
-				close: "7:00 PM",
-				isOpen: false
-			},
-			tags: ["Therapy", "Massage", "Acupuncture"]
-		},
-		{
-			id: 5,
-			name: "Tech Fix",
-			category: "services",
-			rating: 4.5,
-			totalReviews: 78,
-			address: "202 Digital Drive, Tech Park",
-			distance: "2.1 mi",
-			image: "https://placekitten.com/504/304", // Placeholder image
-			hours: {
-				open: "10:00 AM",
-				close: "8:00 PM",
-				isOpen: true
-			},
-			tags: ["Repairs", "Upgrades", "Diagnostics"]
-		},
-		{
-			id: 6,
-			name: "Green Garden Spa",
-			category: "beauty",
-			rating: 4.9,
-			totalReviews: 143,
-			address: "303 Relaxation Road, Spa District",
-			distance: "0.9 mi",
-			image: "https://placekitten.com/505/305", // Placeholder image
-			hours: {
-				open: "9:00 AM",
-				close: "9:00 PM",
-				isOpen: true
-			},
-			tags: ["Massage", "Facial", "Manicure"]
-		}
-	];
 
 	const filteredStores = stores.filter(store =>
-		(currentCategory === "all" || store.category === currentCategory) &&
+		(currentCategory === "all" || store.industry === currentCategory) &&
 		(searchQuery === "" ||
 			store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
 			store.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
 	);
 
 	return (
-		<div className="flex flex-col min-h-screen bg-gray-50">
+		<>
 			{/* Header */}
 			<header className="bg-white border-b">
 				<div className="container mx-auto px-4 py-4">
@@ -282,7 +158,7 @@ const StoresPage: React.FC = () => {
 					<p>© 2025 StoreBooker. All rights reserved.</p>
 				</div>
 			</footer>
-		</div>
+		</>
 	);
 };
 
