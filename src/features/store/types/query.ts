@@ -1,7 +1,7 @@
 import { Time } from "@/global/models/time";
 
 export interface Store {
-	id: number;
+	id: string;
 	name: string;
 	description?: string;
 	industry: string;
@@ -10,7 +10,23 @@ export interface Store {
 	phone: string;
 	timezone: string;
 	today: {
+		isOpenToday: boolean;
 		openHour: Time;
 		closeHour: Time;
 	}
+	rating: number;
+	totalReviews: number;
+};
+
+export interface Profile {
+	id: string;
+	name: string;
+	appeance?: string;
+};
+
+export interface WorkHour {
+	day: {
+		name: "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday";
+		times: Time[];
+	}[];
 }

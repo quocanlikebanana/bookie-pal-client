@@ -2,7 +2,8 @@
  * @type {import("@rtk-query/codegen-openapi").ConfigFile}
  */
 const config = {
-	schemaFile: '../../../apis/client/store.yml',
+	// schemaFile: '../../../apis/client/store.yml',
+	schemaFile: '../../../apis/cms/calendar/calendar.yml',
 	apiFile: '../features/store/apis/store.api.ts',
 	apiImport: 'storeApi',
 	outputFile: '../features/store/apis/store.api-gen.ts',

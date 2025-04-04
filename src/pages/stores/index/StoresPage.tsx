@@ -12,18 +12,23 @@ import {
 	Filter,
 	SortAsc
 } from "lucide-react";
+import { Store } from "@/features/store/types/query";
+import { useGetIndustriesQuery } from "@/features/store/apis/store.api-gen";
+import generateMockStores from "@/mocks/stores";
+import TimeUtil from "@/global/models/time";
+import { useNavigate } from "react-router";
+import paths from "@/routes/paths";
 
 const StoresPage: React.FC = () => {
+	const navigate = useNavigate();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [currentCategory, setCurrentCategory] = useState("all");
 
+	const { data: industries } = useGetIndustriesQuery();
+	const stores: Store[] = generateMockStores(10);
 
-	const filteredStores = stores.filter(store =>
-		(currentCategory === "all" || store.industry === currentCategory) &&
-		(searchQuery === "" ||
-			store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			store.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
-	);
+
+	if (!industries) return null;
 
 	return (
 		<>
@@ -67,13 +72,13 @@ const StoresPage: React.FC = () => {
 						className="w-full"
 					>
 						<TabsList className="flex overflow-x-auto py-2 space-x-2 w-full h-auto bg-transparent">
-							{categories.map(category => (
+							{industries.map((industry, index) => (
 								<TabsTrigger
-									key={category.id}
-									value={category.id}
+									key={index}
+									value={industry}
 									className="rounded-full px-4 py-1.5 data-[state=active]:bg-black data-[state=active]:text-white"
 								>
-									{category.name}
+									{industry}
 								</TabsTrigger>
 							))}
 						</TabsList>
@@ -83,19 +88,19 @@ const StoresPage: React.FC = () => {
 
 			{/* Store Listings */}
 			<main className="container mx-auto px-4 py-6 flex-1">
-				{filteredStores.length > 0 ? (
+				{stores.length > 0 ? (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{filteredStores.map(store => (
-							<Card key={store.id} className="overflow-hidden hover:shadow-md transition-shadow">
+						{stores.map(store => (
+							<Card
+								key={store.id}
+								className="overflow-hidden hover:shadow-md transition-shadow"
+							>
 								<div className="relative h-48 bg-gray-200">
 									<img
-										src="/api/placeholder/500/300"
+										src={store.image}
 										alt={store.name}
 										className="h-full w-full object-cover"
 									/>
-									<div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-md text-sm font-medium">
-										{store.distance}
-									</div>
 								</div>
 								<CardContent className="p-4">
 									<div className="flex justify-between items-start mb-2">
@@ -114,27 +119,28 @@ const StoresPage: React.FC = () => {
 
 									<div className="flex items-center mb-3">
 										<Clock className="h-4 w-4 mr-1" />
-										<span className={`text-sm ${store.hours.isOpen ? "text-green-600" : "text-red-600"}`}>
-											{store.hours.isOpen ? "Open" : "Closed"} · {store.hours.open} - {store.hours.close}
+										<span className={`text-sm ${store.today.isOpenToday ? "text-green-600" : "text-red-600"}`}>
+											{store.today.isOpenToday
+												? "Open"
+												: "Closed"
+											}
+											· {TimeUtil.toString(store.today.openHour)} - {TimeUtil.toString(store.today.closeHour)}
 										</span>
 									</div>
 
 									<div className="flex flex-wrap gap-2 mt-2">
-										{store.tags.map((tag, idx) => (
-											<span
-												key={idx}
-												className="bg-gray-100 text-gray-800 text-xs rounded-full px-2 py-1"
-											>
-												{tag}
-											</span>
-										))}
+										<span
+											className="bg-gray-100 text-gray-800 text-xs rounded-full px-2 py-1"
+										>
+											{store.industry}
+										</span>
 									</div>
 								</CardContent>
-								<CardFooter className="bg-gray-50 p-4 flex justify-between items-center">
-									<Button variant="outline" size="sm">
+								<CardFooter className="p-4 flex justify-between items-center">
+									<Button onClick={() => navigate(paths.stores.in(store.id).ROOT)} variant="outline" size="sm">
 										View Details
 									</Button>
-									<Button size="sm">
+									<Button onClick={() => navigate(paths.stores.in(store.id).BOOK)} size="sm">
 										Book
 										<ChevronRight className="h-4 w-4 ml-1" />
 									</Button>

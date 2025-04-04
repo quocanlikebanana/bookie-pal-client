@@ -1,30 +1,21 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp, Clock } from "lucide-react";
-
-interface TimeSlot {
-	day: string;
-	hours: string;
-	isClosed: boolean;
-}
+import { Card } from "@/components/ui/card";
+import BusinessHours from "./components/BusinessHours";
+import Services from "./components/Services";
+import Classes from "./components/Classes";
+import Team from "./components/Team";
+import Reviews from "./components/Reviews";
+import generateMockStores from "@/mocks/stores";
+import { useNavigate } from "react-router";
+import paths from "@/routes/paths";
 
 const StorePage: React.FC = () => {
-	const [isTimeOpen, setIsTimeOpen] = useState(false);
-
-	const timeSlots: TimeSlot[] = [
-		{ day: "Sunday", hours: "8 AM - 6 PM", isClosed: true },
-		{ day: "Monday", hours: "8 AM - 5 PM", isClosed: false },
-		{ day: "Tuesday", hours: "8 AM - 5 PM", isClosed: false },
-		{ day: "Wednesday", hours: "8 AM - 6 PM", isClosed: false },
-		{ day: "Thursday", hours: "8 AM - 5 PM", isClosed: false },
-		{ day: "Friday", hours: "8 AM - 5 PM", isClosed: false },
-		{ day: "Saturday", hours: "8 AM - 6 PM", isClosed: true },
-	];
-
-	const [activeTab, setActiveTab] = useState("Services");
+	const navigate = useNavigate();
 	const tabs = ["Services", "Classes", "Team", "Reviews"];
+	const [activeTab, setActiveTab] = useState("Services");
+
+	const store = generateMockStores(1)[0];
 
 	return (
 		<div className="flex flex-col min-h-screen bg-gray-50">
@@ -35,7 +26,7 @@ const StorePage: React.FC = () => {
 						{tabs.map((tab) => (
 							<button
 								key={tab}
-								className={`py-2 ${activeTab === tab
+								className={`py-2 cursor-pointer ${activeTab === tab
 									? "border-b-2 border-black font-medium"
 									: "text-gray-500"
 									}`}
@@ -67,86 +58,15 @@ const StorePage: React.FC = () => {
 			<main className="container mx-auto px-4 py-6 flex flex-col md:flex-row">
 				{/* Left Column */}
 				<div className="w-full md:w-2/3 pr-0 md:pr-8">
-					{activeTab === "Services" && (
-						<div className="mb-12">
-							<h2 className="text-2xl font-bold mb-6">Services</h2>
+					<div>
+						{activeTab === "Services" && <Services />}
 
-							<Collapsible
-								className="border rounded-md mb-4"
-								open={true}
-							>
-								<CollapsibleTrigger className="flex justify-between items-center w-full p-4 text-left">
-									<span className="text-gray-500">MEETING WITH AN</span>
-									<ChevronDown className="h-5 w-5" />
-								</CollapsibleTrigger>
-								<CollapsibleContent className="p-4 pt-0">
-									{/* Service content would go here */}
-								</CollapsibleContent>
-							</Collapsible>
+						{activeTab === "Classes" && <Classes />}
 
-							<Collapsible className="border rounded-md">
-								<CollapsibleTrigger className="flex justify-between items-center w-full p-4 text-left">
-									<span className="text-gray-500">OTHER</span>
-									<ChevronDown className="h-5 w-5" />
-								</CollapsibleTrigger>
-								<CollapsibleContent className="p-4">
-									{/* Other content would go here */}
-								</CollapsibleContent>
-							</Collapsible>
-						</div>
-					)}
+						{activeTab === "Team" && <Team />}
 
-					{activeTab === "Classes" && (
-						<div>
-							<h2 className="text-2xl font-bold mb-6">Classes</h2>
-							<div className="flex items-center justify-center py-12 text-gray-500">
-								There are no classes to display
-							</div>
-						</div>
-					)}
-
-					{activeTab === "Team" && (
-						<div>
-							<h2 className="text-2xl font-bold mb-6">Team</h2>
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-								<Card className="overflow-hidden">
-									<CardContent className="p-0">
-										<div className="flex items-center p-4">
-											<div className="h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center mr-4 text-xl font-medium">
-												A
-											</div>
-											<div className="flex-1">An Ngo</div>
-											<ChevronDown className="h-5 w-5" />
-										</div>
-									</CardContent>
-								</Card>
-
-								<Card className="overflow-hidden">
-									<CardContent className="p-0">
-										<div className="flex items-center p-4">
-											<div className="h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center mr-4 text-xl font-medium">
-												A
-											</div>
-											<div className="flex-1">A</div>
-											<ChevronDown className="h-5 w-5" />
-										</div>
-									</CardContent>
-								</Card>
-							</div>
-						</div>
-					)}
-
-					{activeTab === "Reviews" && (
-						<div>
-							<h2 className="text-2xl font-bold mb-6">Reviews</h2>
-							<div className="flex flex-col md:flex-row items-center justify-between mb-8">
-								<p className="mb-4 md:mb-0">Be the first to review us and share insights about your experience.</p>
-								<Button variant="outline" className="whitespace-nowrap">
-									Write a review
-								</Button>
-							</div>
-						</div>
-					)}
+						{activeTab === "Reviews" && <Reviews />}
+					</div>
 
 					{/* Good to know section */}
 					<div className="mt-8 pt-8 border-t">
@@ -166,40 +86,12 @@ const StorePage: React.FC = () => {
 				{/* Right Column / Booking Card */}
 				<div className="w-full md:w-1/3 mt-8 md:mt-0">
 					<Card className="p-6 bg-white">
-						<h2 className="text-3xl font-bold mb-4">Ango</h2>
-						<Button className="w-full mb-6 py-6 text-lg" size="lg">
+						<h2 className="text-3xl font-bold mb-4">{store.name}</h2>
+						<Button onClick={() => navigate(paths.stores.in(store.id).BOOK)} className="w-full mb-6 py-6 text-lg" size="lg">
 							Book
 						</Button>
 
-						<div className="mb-4">
-							<button
-								className="flex items-center text-gray-700 mb-1"
-								onClick={() => setIsTimeOpen(!isTimeOpen)}
-							>
-								<Clock className="h-5 w-5 mr-2" />
-								<span className="mr-1 font-medium">Closed now</span>
-								{isTimeOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-							</button>
-							<div className="text-sm text-gray-500">8 AM – 6 PM</div>
-						</div>
-
-						{isTimeOpen && (
-							<div className="bg-white rounded-md">
-								{timeSlots.map((slot, index) => (
-									<div
-										key={slot.day}
-										className={`flex justify-between py-2 ${slot.day === "Wednesday" ? "font-bold" : ""
-											}`}
-									>
-										<span>{slot.day}</span>
-										<span>{slot.isClosed ? "Closed" : slot.hours}</span>
-									</div>
-								))}
-								<div className="text-xs text-right text-gray-500 mt-2">
-									Time zone (Indochina Time)
-								</div>
-							</div>
-						)}
+						<BusinessHours />
 					</Card>
 				</div>
 			</main>
