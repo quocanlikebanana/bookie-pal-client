@@ -12,12 +12,14 @@ import {
 	Filter,
 	SortAsc
 } from "lucide-react";
-import { Store } from "@/features/store/types/query";
-import { useGetIndustriesQuery } from "@/features/store/apis/store.api-gen";
-import generateMockStores from "@/mocks/stores";
-import TimeUtil from "@/global/models/time";
 import { useNavigate } from "react-router";
 import paths from "@/routes/paths";
+import { useGetIndustriesQuery, useGetStoresQuery } from "@/features/store/apis/store.api-gen";
+import { faker } from "@faker-js/faker";
+import { generateMockRating, generateMockTotalReviews } from "@/mocks/stores";
+import { StoreUtil } from "@/global/models/storeUtil";
+
+// TODO: replace all mock data with real data from the API (faker.js)
 
 const StoresPage: React.FC = () => {
 	const navigate = useNavigate();
@@ -25,10 +27,14 @@ const StoresPage: React.FC = () => {
 	const [currentCategory, setCurrentCategory] = useState("all");
 
 	const { data: industries } = useGetIndustriesQuery();
-	const stores: Store[] = generateMockStores(10);
+	const { data: stores } = useGetStoresQuery({
+		page: 1,
+		limit: 10,
+	});
 
 
 	if (!industries) return null;
+	if (!stores) return null;
 
 	return (
 		<>
@@ -90,63 +96,70 @@ const StoresPage: React.FC = () => {
 			<main className="container mx-auto px-4 py-6 flex-1">
 				{stores.length > 0 ? (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{stores.map(store => (
-							<Card
-								key={store.id}
-								className="overflow-hidden hover:shadow-md transition-shadow"
-							>
-								<div className="relative h-48 bg-gray-200">
-									<img
-										src={store.image}
-										alt={store.name}
-										className="h-full w-full object-cover"
-									/>
-								</div>
-								<CardContent className="p-4">
-									<div className="flex justify-between items-start mb-2">
-										<h3 className="text-xl font-bold">{store.name}</h3>
-										<div className="flex items-center">
-											<Star className="h-4 w-4 fill-yellow-400 stroke-yellow-400 mr-1" />
-											<span className="font-medium">{store.rating}</span>
-											<span className="text-gray-500 text-sm ml-1">({store.totalReviews})</span>
+						{stores.map(store => {
+							const isOpenTodayDisplay = StoreUtil.isOpenTodayDisplay(store);
+							return (
+								<Card
+									key={store.id}
+									className="overflow-hidden hover:shadow-md transition-shadow"
+								>
+									<div className="relative h-48 bg-gray-200">
+										<img
+											src={faker.image.avatar()}
+											alt={store.name}
+											className="h-full w-full object-cover"
+										/>
+									</div>
+									<CardContent className="p-4">
+										<div className="flex justify-between items-start mb-2">
+											<h3 className="text-xl font-bold">{store.name}</h3>
+											<div className="flex items-center">
+												<Star className="h-4 w-4 fill-yellow-400 stroke-yellow-400 mr-1" />
+												<span className="font-medium">{generateMockRating()}</span>
+												<span className="text-gray-500 text-sm ml-1">({generateMockTotalReviews()})</span>
+											</div>
 										</div>
-									</div>
 
-									<div className="flex items-center text-gray-500 mb-3">
-										<MapPin className="h-4 w-4 mr-1" />
-										<span className="text-sm">{store.address}</span>
-									</div>
+										<div className="flex items-center text-gray-500 mb-3">
+											<MapPin className="h-4 w-4 mr-1" />
+											<span className="text-sm">{store.address}</span>
+										</div>
 
-									<div className="flex items-center mb-3">
-										<Clock className="h-4 w-4 mr-1" />
-										<span className={`text-sm ${store.today.isOpenToday ? "text-green-600" : "text-red-600"}`}>
-											{store.today.isOpenToday
-												? "Open"
-												: "Closed"
-											}
-											· {TimeUtil.toString(store.today.openHour)} - {TimeUtil.toString(store.today.closeHour)}
-										</span>
-									</div>
+										<div className="flex items-center mb-3">
+											<Clock className="h-4 w-4 mr-1" />
+											<span className={`text-sm ${isOpenTodayDisplay.isOpen
+												? "text-green-600"
+												: "text-red-600"
+												}`}>
+												{isOpenTodayDisplay.isOpen
+													? "Open"
+													: "Closed"
+												}
+												<span>·</span>
+												<span className="text-gray-500">{isOpenTodayDisplay.timeRangesDisplay}</span>
+											</span>
+										</div>
 
-									<div className="flex flex-wrap gap-2 mt-2">
-										<span
-											className="bg-gray-100 text-gray-800 text-xs rounded-full px-2 py-1"
-										>
-											{store.industry}
-										</span>
-									</div>
-								</CardContent>
-								<CardFooter className="p-4 flex justify-between items-center">
-									<Button onClick={() => navigate(paths.stores.in(store.id).ROOT)} variant="outline" size="sm">
-										View Details
-									</Button>
-									<Button onClick={() => navigate(paths.stores.in(store.id).BOOK)} size="sm">
-										Book
-										<ChevronRight className="h-4 w-4 ml-1" />
-									</Button>
-								</CardFooter>
-							</Card>
-						))}
+										<div className="flex flex-wrap gap-2 mt-2">
+											<span
+												className="bg-gray-100 text-gray-800 text-xs rounded-full px-2 py-1"
+											>
+												{store.industry}
+											</span>
+										</div>
+									</CardContent>
+									<CardFooter className="p-4 flex justify-between items-center">
+										<Button onClick={() => navigate(paths.stores.in(store.id).ROOT)} variant="outline" size="sm">
+											View Details
+										</Button>
+										<Button onClick={() => navigate(paths.stores.in(store.id).BOOK)} size="sm">
+											Book
+											<ChevronRight className="h-4 w-4 ml-1" />
+										</Button>
+									</CardFooter>
+								</Card>
+							)
+						})}
 					</div>
 				) : (
 					<div className="flex flex-col items-center justify-center py-16 text-gray-500">

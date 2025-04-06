@@ -3,7 +3,7 @@
  */
 const config = {
 	// schemaFile: '../../../apis/client/store.yml',
-	schemaFile: '../../../apis/cms/calendar/calendar.yml',
+	schemaFile: '../../../apis/cms/booking.yml',
 	apiFile: '../features/store/apis/store.api.ts',
 	apiImport: 'storeApi',
 	outputFile: '../features/store/apis/store.api-gen.ts',

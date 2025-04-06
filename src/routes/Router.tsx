@@ -1,8 +1,8 @@
-import StoreBookMain from "@/pages/stores/[id]/book/StoreBookMain";
 import StorePage from "@/pages/stores/[id]/index/StorePage";
 import StoresPage from "@/pages/stores/index/StoresPage";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import paths from "./paths";
+import StoreBookPage from "@/pages/stores/[id]/book/StoreBookPage";
 
 export default function Router() {
 	return (
@@ -14,7 +14,7 @@ export default function Router() {
 						<Route index element={<StoresPage />} />
 						<Route path={paths.stores.in().ROOT} >
 							<Route index element={<StorePage />} />
-							<Route path={paths.stores.in().BOOK} element={<StoreBookMain />} />
+							<Route path={paths.stores.in().BOOK} element={<StoreBookPage />} />
 						</Route>
 					</Route>
 				</Route>

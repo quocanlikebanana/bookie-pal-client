@@ -1,7 +1,7 @@
 import { TimeRange, WorkHoursOfDays } from "@/features/store/apis/store.api-gen";
 import { faker } from "@faker-js/faker";
 
-const generateMockServiceBookTime = (): WorkHoursOfDays => {
+const generateMockAvailability = (): WorkHoursOfDays => {
 	return faker.helpers.arrayElements(
 		[0, 1, 2, 3, 4, 5, 6],
 		faker.number.int({ min: 4, max: 6 })
@@ -45,4 +45,4 @@ const generateMockServiceBookTime = (): WorkHoursOfDays => {
 	});
 }
 
-export default generateMockServiceBookTime;
+export default generateMockAvailability;

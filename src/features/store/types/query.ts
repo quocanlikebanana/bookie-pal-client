@@ -1,4 +1,4 @@
-import { Time } from "@/global/models/time";
+import { Time } from "@/global/models/timeUtil";
 
 export interface Store {
 	id: string;

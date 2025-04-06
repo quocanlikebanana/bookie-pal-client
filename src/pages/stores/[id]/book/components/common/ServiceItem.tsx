@@ -1,4 +1,4 @@
-import TimeUtil from '@/global/models/time'
+import TimeUtil from '@/global/models/timeUtil'
 import { ChevronRight } from 'lucide-react'
 import { useBookingDataContext } from '../../context/BookingDataContext'
 import { useBookingTabContext } from '../../context/BookingTabContext'
@@ -9,7 +9,7 @@ export default function ServiceItem({
 }: {
 	service: Service
 }) {
-	const { dispatch } = useBookingDataContext();
+	const { setService } = useBookingDataContext();
 	const { setCurrentTab } = useBookingTabContext();
 
 	return (
@@ -17,11 +17,8 @@ export default function ServiceItem({
 			key={service.id}
 			className="flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg mb-3 cursor-pointer hover:bg-gray-200"
 			onClick={() => {
-				dispatch({
-					type: "SET_SERVICE_ID",
-					payload: service.id,
-				});
-				setCurrentTab("pickTime");
+				setService(service);
+				setCurrentTab("chooseTeam");
 			}}
 		>
 			<div className="flex items-center">

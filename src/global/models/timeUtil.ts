@@ -43,6 +43,14 @@ class TimeUtil {
 		return formatDuration(duration, { format: ['minutes'] }) + " mins";
 	}
 
+	static formatTimeRanges = (ranges: TimeRange[]): string => {
+		return ranges.map(range => {
+			const startTime = TimeUtil.toString(range.start);
+			const endTime = TimeUtil.toString(range.end);
+			return `${startTime} - ${endTime}`;
+		}).join(", ");
+	}
+
 	static generateCalendarDays = (currentMonthDate: Date): CalendarDay[] => {
 		const year = currentMonthDate.getFullYear();
 		const month = currentMonthDate.getMonth();
@@ -139,7 +147,19 @@ class TimeUtil {
 		});
 
 		return timeSlots;
-	};
+	}
+
+	static isTimeInRange = (time: Time, range: TimeRange): boolean => {
+		const timeMinutes = time.hour * 60 + time.minute;
+		const startMinutes = range.start.hour * 60 + range.start.minute;
+		const endMinutes = range.end.hour * 60 + range.end.minute;
+
+		return timeMinutes >= startMinutes && timeMinutes < endMinutes;
+	}
+
+	static isTimeInRanges = (time: Time, ranges: TimeRange[]): boolean => {
+		return ranges.some(range => TimeUtil.isTimeInRange(time, range));
+	}
 
 };
 

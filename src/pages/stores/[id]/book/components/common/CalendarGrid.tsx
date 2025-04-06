@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
-import TimeUtil from "@/global/models/time";
+import TimeUtil from "@/global/models/timeUtil";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
 
 const monthNames = [
 	'January', 'February', 'March', 'April', 'May', 'June',
@@ -34,8 +33,8 @@ export default function CalendarGrid({
 	return (
 		<div>
 			{/* Month's name */}
-			<div className="flex items-center justify-between mb-2">
-				<div className="text-sm">
+			<div className="flex items-center justify-between mb-4">
+				<div className="font-bold">
 					{monthNames[currentMonthDate.getMonth()]} {currentMonthDate.getFullYear()}
 				</div>
 				<div className="flex gap-1">

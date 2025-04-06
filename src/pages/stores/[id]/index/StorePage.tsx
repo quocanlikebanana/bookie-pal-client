@@ -2,20 +2,26 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import BusinessHours from "./components/BusinessHours";
-import Services from "./components/Services";
-import Classes from "./components/Classes";
-import Team from "./components/Team";
-import Reviews from "./components/Reviews";
-import generateMockStores from "@/mocks/stores";
+import Services from "./components/Tabs/Services";
+import Classes from "./components/Tabs/Classes";
+import Team from "./components/Tabs/Team";
+import Reviews from "./components/Tabs/Reviews";
 import { useNavigate } from "react-router";
 import paths from "@/routes/paths";
+import { useGetStoresByStoreIdQuery } from "@/features/store/apis/store.api-gen";
+import useGetStoreIdFromParams from "@/features/store/hooks/useGetStoreIdFromParams";
 
 const StorePage: React.FC = () => {
 	const navigate = useNavigate();
+	const storeId = useGetStoreIdFromParams();
 	const tabs = ["Services", "Classes", "Team", "Reviews"];
 	const [activeTab, setActiveTab] = useState("Services");
 
-	const store = generateMockStores(1)[0];
+	const { data: store } = useGetStoresByStoreIdQuery({
+		storeId,
+	});
+
+	if (!store) return null;
 
 	return (
 		<div className="flex flex-col min-h-screen bg-gray-50">

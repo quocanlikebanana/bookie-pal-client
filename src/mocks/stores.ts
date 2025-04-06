@@ -28,4 +28,14 @@ const generateMockStores = (count: number): Store[] => {
 	}));
 };
 
+export const generateMockRating = () => {
+	return faker.number.float({ min: 1, max: 5, fractionDigits: 1 });
+}
+
+export const generateMockTotalReviews = () => {
+	return faker.number.int({ min: 0, max: 1000 });
+}
+
+
 export default generateMockStores;
+

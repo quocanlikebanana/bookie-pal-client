@@ -6,8 +6,8 @@ import { Service, useGetStoresByStoreIdServicesQuery } from "@/features/store/ap
 import useGetStoreIdFromParams from "@/features/store/hooks/useGetStoreIdFromParams";
 
 export default function ChooseServiceTab() {
-	const [isMainExpanded, setIsMainExpanded] = useState(true);
 	const storeId = useGetStoreIdFromParams();
+	const [isMainExpanded, setIsMainExpanded] = useState(true);
 	const { data: services } = useGetStoresByStoreIdServicesQuery({
 		storeId
 	});

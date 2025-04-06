@@ -1,6 +1,21 @@
 import { storeApi as api } from "./store.api";
 const injectedRtkApi = api.injectEndpoints({
   endpoints: (build) => ({
+    getStores: build.query<GetStoresApiResponse, GetStoresApiArg>({
+      query: (queryArg) => ({
+        url: `/stores`,
+        params: {
+          page: queryArg.page,
+          limit: queryArg.limit,
+        },
+      }),
+    }),
+    getStoresByStoreId: build.query<
+      GetStoresByStoreIdApiResponse,
+      GetStoresByStoreIdApiArg
+    >({
+      query: (queryArg) => ({ url: `/stores/${queryArg.storeId}` }),
+    }),
     getStoresByStoreIdAvailability: build.query<
       GetStoresByStoreIdAvailabilityApiResponse,
       GetStoresByStoreIdAvailabilityApiArg
@@ -24,12 +39,6 @@ const injectedRtkApi = api.injectEndpoints({
           end: queryArg.end,
         },
       }),
-    }),
-    getStoresByStoreIdTimezone: build.query<
-      GetStoresByStoreIdTimezoneApiResponse,
-      GetStoresByStoreIdTimezoneApiArg
-    >({
-      query: (queryArg) => ({ url: `/stores/${queryArg.storeId}/timezone` }),
     }),
     postStoresByStoreIdBook: build.mutation<
       PostStoresByStoreIdBookApiResponse,
@@ -59,37 +68,35 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: (queryArg) => ({ url: `/stores/${queryArg.storeId}/teams` }),
     }),
-    getStoresByStoreIdTeamsAndTeamIdAvailability: build.query<
-      GetStoresByStoreIdTeamsAndTeamIdAvailabilityApiResponse,
-      GetStoresByStoreIdTeamsAndTeamIdAvailabilityApiArg
+    getTeamsByTeamIdAvailability: build.query<
+      GetTeamsByTeamIdAvailabilityApiResponse,
+      GetTeamsByTeamIdAvailabilityApiArg
     >({
       query: (queryArg) => ({
-        url: `/stores/${queryArg.storeId}/teams/${queryArg.teamId}/availability`,
+        url: `/teams/${queryArg.teamId}/availability`,
         params: {
           start: queryArg.start,
           end: queryArg.end,
         },
       }),
     }),
-    getStoresByStoreIdTeamsAndTeamIdBooked: build.query<
-      GetStoresByStoreIdTeamsAndTeamIdBookedApiResponse,
-      GetStoresByStoreIdTeamsAndTeamIdBookedApiArg
+    getTeamsByTeamIdBooked: build.query<
+      GetTeamsByTeamIdBookedApiResponse,
+      GetTeamsByTeamIdBookedApiArg
     >({
       query: (queryArg) => ({
-        url: `/stores/${queryArg.storeId}/teams/${queryArg.teamId}/booked`,
+        url: `/teams/${queryArg.teamId}/booked`,
         params: {
           start: queryArg.start,
           end: queryArg.end,
         },
       }),
     }),
-    getStoresByStoreIdTeamsAndTeamIdServices: build.query<
-      GetStoresByStoreIdTeamsAndTeamIdServicesApiResponse,
-      GetStoresByStoreIdTeamsAndTeamIdServicesApiArg
+    getTeamsByTeamIdServices: build.query<
+      GetTeamsByTeamIdServicesApiResponse,
+      GetTeamsByTeamIdServicesApiArg
     >({
-      query: (queryArg) => ({
-        url: `/stores/${queryArg.storeId}/teams/${queryArg.teamId}/services`,
-      }),
+      query: (queryArg) => ({ url: `/teams/${queryArg.teamId}/services` }),
     }),
     getServicesByServiceIdTeams: build.query<
       GetServicesByServiceIdTeamsApiResponse,
@@ -97,10 +104,25 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: (queryArg) => ({ url: `/services/${queryArg.serviceId}/teams` }),
     }),
+    getIndustries: build.query<GetIndustriesApiResponse, GetIndustriesApiArg>({
+      query: () => ({ url: `/industries` }),
+    }),
   }),
   overrideExisting: false,
 });
 export { injectedRtkApi as storeGenApi };
+export type GetStoresApiResponse = /** status 200 OK */ Store[];
+export type GetStoresApiArg = {
+  /** Page number for pagination */
+  page?: number;
+  /** Limit number of items per page */
+  limit?: number;
+};
+export type GetStoresByStoreIdApiResponse = /** status 200 OK */ Store;
+export type GetStoresByStoreIdApiArg = {
+  /** Id of the store */
+  storeId: Id;
+};
 export type GetStoresByStoreIdAvailabilityApiResponse =
   /** status 200 OK */ WorkHoursOfDays;
 export type GetStoresByStoreIdAvailabilityApiArg = {
@@ -119,14 +141,6 @@ export type GetStoresByStoreIdBookedApiArg = {
   start: string;
   /** End of the time range in date time */
   end: string;
-};
-export type GetStoresByStoreIdTimezoneApiResponse = /** status 200 OK */ {
-  /** Timezone of the store */
-  timezone?: string;
-};
-export type GetStoresByStoreIdTimezoneApiArg = {
-  /** Id of the store */
-  storeId: Id;
 };
 export type PostStoresByStoreIdBookApiResponse = unknown;
 export type PostStoresByStoreIdBookApiArg = {
@@ -160,11 +174,9 @@ export type GetStoresByStoreIdTeamsApiArg = {
   /** Id of the store */
   storeId: Id;
 };
-export type GetStoresByStoreIdTeamsAndTeamIdAvailabilityApiResponse =
+export type GetTeamsByTeamIdAvailabilityApiResponse =
   /** status 200 OK */ WorkHoursOfDays;
-export type GetStoresByStoreIdTeamsAndTeamIdAvailabilityApiArg = {
-  /** Id of the store */
-  storeId: Id;
+export type GetTeamsByTeamIdAvailabilityApiArg = {
   /** Id of a team member */
   teamId: Id;
   /** Start of the time range in date time */
@@ -172,11 +184,8 @@ export type GetStoresByStoreIdTeamsAndTeamIdAvailabilityApiArg = {
   /** End of the time range in date time */
   end: string;
 };
-export type GetStoresByStoreIdTeamsAndTeamIdBookedApiResponse =
-  /** status 200 OK */ Book[];
-export type GetStoresByStoreIdTeamsAndTeamIdBookedApiArg = {
-  /** Id of the store */
-  storeId: Id;
+export type GetTeamsByTeamIdBookedApiResponse = /** status 200 OK */ Book[];
+export type GetTeamsByTeamIdBookedApiArg = {
   /** Id of a team member */
   teamId: Id;
   /** Start of the time range in date time */
@@ -184,11 +193,9 @@ export type GetStoresByStoreIdTeamsAndTeamIdBookedApiArg = {
   /** End of the time range in date time */
   end: string;
 };
-export type GetStoresByStoreIdTeamsAndTeamIdServicesApiResponse =
+export type GetTeamsByTeamIdServicesApiResponse =
   /** status 200 OK */ Service[];
-export type GetStoresByStoreIdTeamsAndTeamIdServicesApiArg = {
-  /** Id of the store */
-  storeId: Id;
+export type GetTeamsByTeamIdServicesApiArg = {
   /** Id of a team member */
   teamId: Id;
 };
@@ -198,6 +205,9 @@ export type GetServicesByServiceIdTeamsApiArg = {
   /** Id of the service */
   serviceId: Id;
 };
+export type GetIndustriesApiResponse = /** status 200 OK */ string[];
+export type GetIndustriesApiArg = void;
+export type Id = string;
 export type Time = {
   /** Hour of the time (0-23) */
   hour: number;
@@ -216,7 +226,23 @@ export type WorkHoursOfDays = {
   /** Work hours of the day of the week */
   workHours: TimeRange[];
 }[];
-export type Id = string;
+export type Store = {
+  id: Id;
+  /** Name of the store */
+  name: string;
+  /** Description of the store */
+  description: string;
+  /** Address of the store */
+  address: string;
+  /** Industry of the store */
+  industry: string;
+  /** Phone number of the store */
+  phone: string;
+  /** Timezone of the store */
+  timezone: string;
+  /** Work hours of the store */
+  workHours: WorkHoursOfDays;
+};
 export type TeamMemberSmall = {
   id: Id;
   /** Name of the team member */
@@ -265,15 +291,17 @@ export type Customer = AnonymousCustomer & {
   id: Id;
 };
 export const {
+  useGetStoresQuery,
+  useGetStoresByStoreIdQuery,
   useGetStoresByStoreIdAvailabilityQuery,
   useGetStoresByStoreIdBookedQuery,
-  useGetStoresByStoreIdTimezoneQuery,
   usePostStoresByStoreIdBookMutation,
   useGetStoresByStoreIdServicesQuery,
   useGetStoresByStoreIdCustomersQuery,
   useGetStoresByStoreIdTeamsQuery,
-  useGetStoresByStoreIdTeamsAndTeamIdAvailabilityQuery,
-  useGetStoresByStoreIdTeamsAndTeamIdBookedQuery,
-  useGetStoresByStoreIdTeamsAndTeamIdServicesQuery,
+  useGetTeamsByTeamIdAvailabilityQuery,
+  useGetTeamsByTeamIdBookedQuery,
+  useGetTeamsByTeamIdServicesQuery,
   useGetServicesByServiceIdTeamsQuery,
+  useGetIndustriesQuery,
 } = injectedRtkApi;
