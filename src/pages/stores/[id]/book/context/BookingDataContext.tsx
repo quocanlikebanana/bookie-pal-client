@@ -1,6 +1,5 @@
-import { CreateBookingData } from '@/features/store/types/command';
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { Customer, Service, TeamMemberSmall } from '@/features/store/apis/store.api-gen';
+import { Service, TeamMemberSmall } from '@/features/store/apis/store.api-gen';
 import { useAppSelector } from '@/app/store/hooks';
 import { authSelectors } from '@/features/auth/stores/authSlice';
 
@@ -17,56 +16,89 @@ interface BookingDataContextProps {
 	customer: CustomerInfo;
 	comment: string;
 
-	setService: React.Dispatch<React.SetStateAction<Service | null>>;
-	setTeam: React.Dispatch<React.SetStateAction<TeamMemberSmall | null>>;
-	setStartTime: React.Dispatch<React.SetStateAction<Date | null>>;
+	setService: (service: Service | null) => void;
+	setTeam: (team: TeamMemberSmall | null) => void;
+	setStartTime: (startTime: Date | null) => void;
 	setCustomer: (customerInfo: CustomerInfo) => void;
-	setComment: React.Dispatch<React.SetStateAction<string>>;
+	setComment: (comment: string) => void;
 }
 
 const BookingDataContext = createContext<BookingDataContextProps | undefined>(undefined);
 
 export const BookingDataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-	const [service, setService] = useState<Service | null>(null);
-	const [team, setTeam] = useState<TeamMemberSmall | null>(null);
-	const [startTime, setStartTime] = useState<Date | null>(null);
-	const [customer, setCustomer] = useState<CustomerInfo>({
-		email: '',
-		name: '',
-		phone: ''
+	const [bookingData, setBookingData] = useState<{
+		service: Service | null;
+		team: TeamMemberSmall | null;
+		startTime: Date | null;
+		customer: CustomerInfo;
+		comment: string;
+	}>(() => {
+		const savedData = localStorage.getItem('bookingData');
+		if (savedData == null) {
+			return {
+				service: null,
+				team: null,
+				startTime: null,
+				customer: {
+					email: '',
+					name: '',
+					phone: '',
+				},
+				comment: '',
+			};
+		}
+		const parsedData = JSON.parse(savedData) as {
+			service: Service | null;
+			team: TeamMemberSmall | null;
+			startTime: Date | null;
+			customer: CustomerInfo;
+			comment: string;
+		};
+		return {
+			...parsedData,
+			startTime: parsedData.startTime ? new Date(parsedData.startTime) : null,
+		};
 	});
-	const [comment, setComment] = useState<string>('');
+
 	const isAuthenticated = useAppSelector(authSelectors.selectIsAuthenticated);
 	const userInfo = useAppSelector(authSelectors.seleteUser);
 
 	useEffect(() => {
 		if (isAuthenticated && userInfo) {
-			setCustomer({
-				email: userInfo.email,
-				name: userInfo.name,
-				phone: userInfo.phone
-			});
+			setBookingData((prev) => ({
+				...prev,
+				customer: {
+					email: userInfo.email,
+					name: userInfo.name,
+					phone: userInfo.phone,
+				},
+			}));
 		}
 	}, [isAuthenticated, userInfo]);
 
+	useEffect(() => {
+		localStorage.setItem('bookingData', JSON.stringify(bookingData));
+	}, [bookingData]);
 
 	return (
-		<BookingDataContext.Provider value={{
-			service,
-			team,
-			startTime,
-			customer,
-			comment,
-			setService,
-			setTeam,
-			setStartTime,
-			setCustomer: (customerInfo: CustomerInfo) => {
-				if (isAuthenticated == false) {
-					setCustomer(customerInfo);
-				}
-			},
-			setComment
-		}}>
+		<BookingDataContext.Provider
+			value={{
+				...bookingData,
+				setService: (service: Service | null) =>
+					setBookingData((prev) => ({ ...prev, service })),
+				setTeam: (team: TeamMemberSmall | null) =>
+					setBookingData((prev) => ({ ...prev, team })),
+				setStartTime: (startTime: Date | null) =>
+					setBookingData((prev) => ({ ...prev, startTime })),
+				setCustomer: (customerInfo: CustomerInfo) => {
+					if (!isAuthenticated) {
+						setBookingData((prev) => ({ ...prev, customer: customerInfo }));
+					}
+				},
+				setComment: (comment: string) =>
+					setBookingData((prev) => ({ ...prev, comment })),
+			}}
+		>
 			{children}
 		</BookingDataContext.Provider>
 	);

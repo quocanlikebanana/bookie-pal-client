@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 type Tab = 'chooseService' | 'chooseTeam' | 'pickTime' | 'fillForm' | 'booked';
 
@@ -14,7 +14,14 @@ interface BookingTabProviderProps {
 }
 
 export const BookingTabProvider: React.FC<BookingTabProviderProps> = ({ children }) => {
-	const [currentTab, setCurrentTab] = useState<Tab>('chooseService');
+	const [currentTab, setCurrentTab] = useState<Tab>(() => {
+		const savedTab = localStorage.getItem('currentTab') as Tab;
+		return savedTab ? savedTab : 'chooseService';
+	});
+
+	useEffect(() => {
+		localStorage.setItem('currentTab', currentTab);
+	}, [currentTab]);
 
 	return (
 		<BookingContext.Provider value={{ currentTab, setCurrentTab }}>

@@ -7,6 +7,7 @@ export default function ChooseTeamTab() {
 	const { data: teams } = useGetServicesByServiceIdTeamsQuery({
 		serviceId: service?.id || "",
 	}, {
+		skip: service == null,
 		refetchOnMountOrArgChange: true,
 	})
 

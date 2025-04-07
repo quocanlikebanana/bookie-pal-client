@@ -8,20 +8,43 @@ import { useBookingTabContext } from "./context/BookingTabContext";
 import ChooseTeamTab from "./components/Tabs/ChooseTeamTab";
 import PickTimeTab from "./components/Tabs/PickTimeTab";
 import FillFormTab from "./components/Tabs/FillFormTab";
-import { Card } from "@/components/ui/card";
 import BookingStatusCard from "./components/Status/BookingStatusCard";
+import StoreInfoCard from "./components/Status/StoreInfoCard";
+import BookedTab from "./components/Tabs/BookedTab";
 
 const StoreBookMain: React.FC = () => {
 	const navigate = useNavigate();
 	const storeId = useGetStoreIdFromParams();
-	const { currentTab } = useBookingTabContext();
+	const {
+		currentTab,
+		setCurrentTab,
+	} = useBookingTabContext();
+
+	const handleNavigateBack = () => {
+		switch (currentTab) {
+			case "chooseService":
+				navigate(paths.stores.in(storeId).ROOT);
+				break;
+			case "chooseTeam":
+				setCurrentTab("chooseService");
+				break;
+			case "pickTime":
+				setCurrentTab("chooseTeam");
+				break;
+			case "fillForm":
+				setCurrentTab("pickTime");
+				break;
+			case "booked":
+				setCurrentTab("fillForm");
+				break;
+		}
+	};
 
 	return (
 		<div>
 			{/* Header */}
 			<header className="p-4 flex items-center">
-				<ChevronLeft onClick={() => navigate(paths.stores.in(storeId).ROOT)} className="mr-2 cursor-pointer" size={24} />
-				<h1 className="text-xl font-medium">Select a service</h1>
+				<ChevronLeft onClick={handleNavigateBack} className="mr-2 cursor-pointer" size={24} />
 			</header>
 
 			{/* Main Content */}
@@ -33,15 +56,13 @@ const StoreBookMain: React.FC = () => {
 					{currentTab === "chooseTeam" && <ChooseTeamTab />}
 					{currentTab === "pickTime" && <PickTimeTab />}
 					{currentTab === "fillForm" && <FillFormTab />}
-					{currentTab === "booked" && <div>Booked</div>}
+					{currentTab === "booked" && <BookedTab />}
 				</div>
 
 				{/* Right Column - Company Info */}
-				<div className="md:w-96 bg-gray-100 rounded-xl p-6 h-fit">
-					<h2 className="text-2xl font-bold text-center">Ango</h2>
-					<div className="flex items-center justify-center mt-4 mb-6">
-						<BookingStatusCard />
-					</div>
+				<div className="flex flex-col gap-2 w-1/3 max-w-md">
+					<StoreInfoCard />
+					<BookingStatusCard />
 				</div>
 			</div>
 

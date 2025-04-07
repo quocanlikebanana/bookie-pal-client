@@ -14,6 +14,12 @@ import {
 import { useBookingDataContext } from '../../context/BookingDataContext';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { authActions, authSelectors } from '@/features/auth/stores/authSlice';
+import { useBookingTabContext } from '../../context/BookingTabContext';
+
+// TODO: Country codes
+const countryCodes = [
+	'+1', '+44', '+61', '+65', '+66', '+81', '+82', '+84', '+86', '+91'
+];
 
 const FillFormTab: React.FC = () => {
 	const dispatch = useAppDispatch();
@@ -24,6 +30,7 @@ const FillFormTab: React.FC = () => {
 		comment,
 		setComment,
 	} = useBookingDataContext();
+	const { setCurrentTab } = useBookingTabContext();
 
 	const handleCustomerInfoChange = (field: "name" | "email" | "phone", value: string) => {
 		if (isAuthenticated == false) {
@@ -36,12 +43,8 @@ const FillFormTab: React.FC = () => {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+		setCurrentTab("booked");
 	};
-
-	// TODO: Country codes
-	const countryCodes = [
-		'+1', '+44', '+61', '+65', '+66', '+81', '+82', '+84', '+86', '+91'
-	];
 
 	return (
 		<div className="bg-zinc-50 p-6 rounded-lg w-full grid grid-cols-2 gap-4">
@@ -69,7 +72,7 @@ const FillFormTab: React.FC = () => {
 						Login
 					</button>
 				)}
-				<form onSubmit={handleSubmit} className="space-y-4">
+				<form id='bookingForm' onSubmit={handleSubmit} className="space-y-4">
 					{/* Full Name */}
 					<div className="space-y-1">
 						<Label htmlFor="fullName" className="text-sm">
@@ -187,6 +190,7 @@ const FillFormTab: React.FC = () => {
 					<div className="pt-2">
 						<Button
 							type="submit"
+							form='bookingForm'
 							className="bg-white text-black hover:bg-gray-200 rounded-full px-6"
 						>
 							Confirm

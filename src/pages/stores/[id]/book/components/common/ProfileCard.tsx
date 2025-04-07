@@ -26,7 +26,7 @@ const ProfileCard: React.FC<{ team: TeamMemberSmall; }> = ({
 			<Button
 				variant="outline"
 				onClick={handleClick}
-				className="rounded-full px-8 border-neutral-300 hover:bg-neutral-200 w-full"
+				className="rounded-full px-8 border-neutral-300 hover:bg-neutral-200 w-full mt-auto"
 			>
 				Book
 			</Button>
