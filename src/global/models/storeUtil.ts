@@ -1,5 +1,16 @@
-import { Store } from "@/features/store/apis/store.api-gen";
+import { Store } from "@/features/booking/apis/booking.api-gen";
 import TimeUtil from "./timeUtil";
+
+export const EMPTY_STORE: Store = {
+	id: '',
+	name: '',
+	description: '',
+	address: '',
+	industry: '',
+	phone: '',
+	timezone: '',
+	workHours: [],
+};
 
 export class StoreUtil {
 	static isOpenTodayDisplay(store: Store): {

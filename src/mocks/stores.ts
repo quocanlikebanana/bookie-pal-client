@@ -1,4 +1,4 @@
-import { Store } from "@/features/store/types/query";
+import { Store } from "@/features/booking/types/query";
 import { faker } from "@faker-js/faker";
 import { industries } from "./industries";
 

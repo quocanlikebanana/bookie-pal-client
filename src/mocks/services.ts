@@ -1,4 +1,4 @@
-import { Service } from "@/features/store/types/query";
+import { Service } from "@/features/booking/types/query";
 import { faker } from "@faker-js/faker";
 
 const serviceAppearance = [

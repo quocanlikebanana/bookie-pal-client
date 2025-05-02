@@ -1,4 +1,4 @@
-import { TimeRange, WorkHoursOfDays } from "@/features/store/apis/store.api-gen";
+import { TimeRange, WorkHoursOfDays } from "@/features/booking/apis/booking.api-gen";
 import { faker } from "@faker-js/faker";
 
 const generateMockAvailability = (): WorkHoursOfDays => {

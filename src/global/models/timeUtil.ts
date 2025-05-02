@@ -1,4 +1,4 @@
-import { TimeRange } from '@/features/store/apis/store.api-gen';
+import { TimeRange } from '@/features/booking/apis/booking.api-gen';
 import { intervalToDuration, formatDuration } from 'date-fns';
 
 export type Time = {

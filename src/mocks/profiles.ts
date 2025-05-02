@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Profile } from '../features/store/types/query';
+import { Profile } from '../features/booking/types/query';
 
 function generateMockProfiles(length?: number): Profile[] {
 	if (length == null) {
