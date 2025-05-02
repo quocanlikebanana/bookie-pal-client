@@ -7,15 +7,15 @@ import Classes from "./components/Tabs/Classes";
 import Team from "./components/Tabs/Team";
 import Reviews from "./components/Tabs/Reviews";
 import { useNavigate } from "react-router";
-import useGetStore from "@/features/booking/hooks/useGetStore";
 import { paths } from "@/routers/paths";
+import { useAppSelector } from "@/app/store/hooks";
+import storeSlice from "@/features/booking/stores/storeSlice";
 
 const StorePage: React.FC = () => {
 	const navigate = useNavigate();
 	const tabs = ["Services", "Classes", "Team", "Reviews"];
 	const [activeTab, setActiveTab] = useState("Services");
-
-	const { storeQuery } = useGetStore();
+	const store = useAppSelector(storeSlice.selectors.getStore);
 
 	return (
 		<div className="flex flex-col min-h-screen bg-gray-50">
@@ -84,18 +84,16 @@ const StorePage: React.FC = () => {
 				</div>
 
 				{/* Right Column / Booking Card */}
-				{storeQuery.data &&
-					<div className="w-full md:w-1/3 mt-8 md:mt-0">
-						<Card className="p-6 bg-white">
-							<h2 className="text-3xl font-bold mb-4">{storeQuery.data.name}</h2>
-							<Button onClick={() => navigate(paths.stores.in(storeQuery.data?.id).BOOK)} className="w-full mb-6 py-6 text-lg" size="lg">
-								Book
-							</Button>
+				<div className="w-full md:w-1/3 mt-8 md:mt-0">
+					<Card className="p-6 bg-white">
+						<h2 className="text-3xl font-bold mb-4">{store.name}</h2>
+						<Button onClick={() => navigate(paths.stores.in(store.id).BOOKING)} className="w-full mb-6 py-6 text-lg" size="lg">
+							Book
+						</Button>
 
-							<BusinessHours />
-						</Card>
-					</div>
-				}
+						<BusinessHours />
+					</Card>
+				</div>
 			</main>
 		</div>
 	);

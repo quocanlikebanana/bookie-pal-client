@@ -2,17 +2,18 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import ServiceCategorySection from "../common/ServiceCategorySection";
 import ServiceItem from "../common/ServiceItem";
-import { Service, useGetStoresByStoreIdServicesQuery } from "@/features/booking/apis/booking.api-gen";
-import useGetStoreIdFromParams from "@/features/booking/hooks/useGetStoreIdFromParams";
+import { Service } from "@/features/booking/apis/booking.api-gen";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
+import storeSlice from "@/features/booking/stores/storeSlice";
+import { useBookingTabContext } from "../../context/booking-tab.context";
+import bookingSlice from "@/features/booking/stores/booking/bookingSlice";
 
 const ChooseServiceTab: React.FC = () => {
-	const storeId = useGetStoreIdFromParams();
-	const [isMainExpanded, setIsMainExpanded] = useState(true);
-	const { data: services } = useGetStoresByStoreIdServicesQuery({
-		storeId
-	});
+	const dispatch = useAppDispatch();
+	const services = useAppSelector(storeSlice.selectors.getServices);
 
-	if (!services) return null;
+	const { setCurrentTab } = useBookingTabContext();
+	const [isMainExpanded, setIsMainExpanded] = useState(true);
 
 	const serviceByCategory = services.reduce((acc, service) => {
 		if (!service) return acc;
@@ -51,7 +52,14 @@ const ChooseServiceTab: React.FC = () => {
 					{isMainExpanded && (
 						<div className="space-y-2">
 							{services.map(service => {
-								return <ServiceItem service={service} key={service.id} />
+								return <ServiceItem
+									service={service}
+									key={service.id}
+									onClicked={() => {
+										dispatch(bookingSlice.actions.setService(service));
+										setCurrentTab("chooseTeam");
+									}}
+								/>
 							})}
 						</div>
 					)}

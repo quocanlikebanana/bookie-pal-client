@@ -2,28 +2,30 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Copy, Network } from 'lucide-react';
-import { useBookingDataContext } from '../../context/booking-data.context';
 import { faker } from '@faker-js/faker';
 import { useBookingTabContext } from '../../context/booking-tab.context';
-import useGetStore from '@/features/booking/hooks/useGetStore';
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
+import bookingSelectors from '@/features/booking/stores/booking/booking.selectors';
+import bookingSlice from '@/features/booking/stores/booking/bookingSlice';
 
 const BookedTab: React.FC = () => {
-	const [email, setEmail] = React.useState("");
-	const { storeQuery: { data: store } } = useGetStore();
+	const dispatch = useAppDispatch();
 	const {
+		store,
 		service,
 		team,
 		startTime,
-		getEndTime,
+		endTime,
 		customer,
 		comment,
-		clearBookingData,
-	} = useBookingDataContext();
+	} = useAppSelector(bookingSelectors.selectBookingState);
 	const { setCurrentTab } = useBookingTabContext();
 
-	const endTime = getEndTime();
+	const [email, setEmail] = React.useState("");
 
-	if (!service || !team || !startTime || !endTime || !customer || store) return null;
+	if (!store || !service || !team || !startTime || !customer) {
+		return null; // TODO: or some loading state
+	}
 
 	const dateString = startTime.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 	const startTimeString = startTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }).replace(/\s/g, '').toLowerCase();
@@ -36,7 +38,7 @@ const BookedTab: React.FC = () => {
 	}
 
 	const onBookAnother = () => {
-		clearBookingData();
+		dispatch(bookingSlice.actions.clearBookingData());
 		setCurrentTab("chooseService");
 	};
 

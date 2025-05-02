@@ -1,33 +1,34 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { EMPTY_STORE } from '@/global/models/storeUtil';
-import { Store } from '../apis/booking.api-gen';
+import { Pagination, Service, Store } from '../apis/booking.api-gen';
 
-// Define the type for the state
 interface StoreState {
-	currentStore: Store | null;
+	currentData: {
+		store: Store;
+		services: Service[];
+		pagedServices: Pagination;
+	} | null;
 }
 
-// Initial state
 const initialState: StoreState = {
-	currentStore: EMPTY_STORE,
+	currentData: null,
 };
 
-// Create the slice
 const storeSlice = createSlice({
 	name: 'store',
 	initialState,
 	reducers: {
-		setCurrentStore: (state, action) => {
-			state.currentStore = action.payload;
+		setCurrentStore: (state, action: PayloadAction<StoreState["currentData"]>) => {
+			state.currentData = action.payload;
 		},
 		clearCurrentStore: (state) => {
-			state.currentStore = null;
+			state.currentData = null;
 		},
 	},
 	selectors: {
-		getCurrentStore: (state: StoreState): Store => state.currentStore || EMPTY_STORE,
+		getStore: (state: StoreState): Store => state.currentData?.store || EMPTY_STORE,
+		getServices: (state: StoreState): Service[] => state.currentData?.services || [],
 	},
 });
-
 
 export default storeSlice;

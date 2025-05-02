@@ -11,11 +11,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { useBookingDataContext } from '../../context/booking-data.context';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { authActions, authSelectors } from '@/features/auth/stores/authSlice';
 import { usePostStoresByStoreIdBookMutation } from '@/features/booking/apis/booking.api-gen';
 import { useBookingTabContext } from '../../context/booking-tab.context';
+import { profileSelectors } from '@/features/profile/stores/profileSlice';
+import bookingSlice from '@/features/booking/stores/booking/bookingSlice';
 
 // TODO: Country codes
 const countryCodes = [
@@ -24,15 +24,11 @@ const countryCodes = [
 
 const FillFormTab: React.FC = () => {
 	const dispatch = useAppDispatch();
-	const isAuthenticated = useAppSelector(authSelectors.selectIsAuthenticated);
+	const customer = useAppSelector(bookingSlice.selectors.selectCustomer);
+	const comment = useAppSelector(bookingSlice.selectors.selectComment);
+	const isAuthenticated = useAppSelector(profileSelectors.selectIsAuthenticated);
+
 	const { setCurrentTab } = useBookingTabContext();
-	const {
-		customer,
-		setCustomer,
-		comment,
-		setComment,
-		getCreateBookParams,
-	} = useBookingDataContext();
 
 	const [book, { isSuccess }] = usePostStoresByStoreIdBookMutation();
 
@@ -43,113 +39,88 @@ const FillFormTab: React.FC = () => {
 	}, [isSuccess]);
 
 	const handleCustomerInfoChange = (field: "name" | "email" | "phone", value: string) => {
-		if (isAuthenticated == false) {
-			setCustomer({
-				...customer,
-				[field]: value,
-			});
-		}
+		dispatch(bookingSlice.actions.setCustomer({
+			...customer,
+			[field]: value,
+		}));
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		const bookData = getCreateBookParams();
+		const bookData = useAppSelector(bookingSlice.selectors.selectBookingData);
+		// TODO: Validate booking data (show errors)
+		if (!bookData) return;
 		book(bookData);
 	};
 
 	return (
 		<div className="bg-zinc-50 p-6 rounded-lg w-full grid grid-cols-2 gap-4">
+			<form id='bookingForm' onSubmit={handleSubmit} className="space-y-4">
+				{/* Full Name */}
+				<div className="space-y-1">
+					<Label htmlFor="fullName" className="text-sm">
+						Full Name <span className="text-red-500">*</span>
+					</Label>
+					<Input
+						id="fullName"
+						disabled={isAuthenticated}
+						value={customer.name}
+						onChange={(e) => handleCustomerInfoChange("name", e.target.value)}
+						className="bg-zinc-100 border-zinc-200"
+						required
+						placeholder='Enter your full name'
+					/>
+				</div>
 
-			{/* Booking Form */}
-			<div>
-				{isAuthenticated ? (
-					<button onClick={() => dispatch(authActions.logout())}>
-						Logout
-					</button>
-				) : (
-					<button onClick={() => dispatch(authActions.login({
-						user: {
-							avatar: "https://example.com/avatar.jpg",
-							email: "johndoe@gmail.com",
-							id: "1",
-							name: "John Doe",
-							phone: "+1 123 456 7890",
-						},
-						token: {
-							accessToken: "",
-							refreshToken: "",
-						}
-					}))}>
-						Login
-					</button>
-				)}
-				<form id='bookingForm' onSubmit={handleSubmit} className="space-y-4">
-					{/* Full Name */}
-					<div className="space-y-1">
-						<Label htmlFor="fullName" className="text-sm">
-							Full Name <span className="text-red-500">*</span>
-						</Label>
-						<Input
-							id="fullName"
+				{/* Phone */}
+				<div className="space-y-1">
+					<Label htmlFor="phoneNumber" className="text-sm">
+						Phone <span className="text-red-500">*</span>
+					</Label>
+					<div className="flex gap-2">
+						{/* TODO: Phone zone code */}
+						<Select
 							disabled={isAuthenticated}
-							value={customer.name}
-							onChange={(e) => handleCustomerInfoChange("name", e.target.value)}
-							className="bg-zinc-100 border-zinc-200"
+							defaultValue='+1'
+						>
+							<SelectTrigger className="w-24 bg-zinc-100 border-zinc-200">
+								<SelectValue placeholder="+1" />
+							</SelectTrigger>
+							<SelectContent className="bg-zinc-100 border-zinc-200">
+								{countryCodes.map((code) => (
+									<SelectItem key={code} value={code}>{code}</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+						<Input
+							id="phoneNumber"
+							disabled={isAuthenticated}
+							value={customer.phone}
+							onChange={(e) => handleCustomerInfoChange('phone', e.target.value)}
+							className="flex-1 bg-zinc-100 border-zinc-200"
 							required
-							placeholder='Enter your full name'
+							placeholder='Phone Number'
 						/>
 					</div>
+				</div>
 
-					{/* Phone */}
-					<div className="space-y-1">
-						<Label htmlFor="phoneNumber" className="text-sm">
-							Phone <span className="text-red-500">*</span>
-						</Label>
-						<div className="flex gap-2">
-							{/* TODO: Phone zone code */}
-							<Select
-								disabled={isAuthenticated}
-								defaultValue='+1'
-							>
-								<SelectTrigger className="w-24 bg-zinc-100 border-zinc-200">
-									<SelectValue placeholder="+1" />
-								</SelectTrigger>
-								<SelectContent className="bg-zinc-100 border-zinc-200">
-									{countryCodes.map((code) => (
-										<SelectItem key={code} value={code}>{code}</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<Input
-								id="phoneNumber"
-								disabled={isAuthenticated}
-								value={customer.phone}
-								onChange={(e) => handleCustomerInfoChange('phone', e.target.value)}
-								className="flex-1 bg-zinc-100 border-zinc-200"
-								required
-								placeholder='Phone Number'
-							/>
-						</div>
-					</div>
-
-					{/* Email */}
-					<div className="space-y-1">
-						<Label htmlFor="email" className="text-sm">
-							Email <span className="text-red-500">*</span>
-						</Label>
-						<Input
-							id="email"
-							disabled={isAuthenticated}
-							type="email"
-							value={customer.email}
-							onChange={(e) => handleCustomerInfoChange('email', e.target.value)}
-							className="bg-zinc-100 border-zinc-200"
-							required
-							placeholder='Enter your email'
-						/>
-					</div>
-				</form>
-			</div>
+				{/* Email */}
+				<div className="space-y-1">
+					<Label htmlFor="email" className="text-sm">
+						Email <span className="text-red-500">*</span>
+					</Label>
+					<Input
+						id="email"
+						disabled={isAuthenticated}
+						type="email"
+						value={customer.email}
+						onChange={(e) => handleCustomerInfoChange('email', e.target.value)}
+						className="bg-zinc-100 border-zinc-200"
+						required
+						placeholder='Enter your email'
+					/>
+				</div>
+			</form>
 
 			{/* Cancellation Policy */}
 			<div className="bg-zinc-100 p-4 rounded-md space-y-4 mt-6">
@@ -179,7 +150,7 @@ const FillFormTab: React.FC = () => {
 					<Textarea
 						id="comments"
 						value={comment}
-						onChange={(e) => setComment(e.target.value)}
+						onChange={(e) => dispatch(bookingSlice.actions.setComment(e.target.value))}
 						className="bg-zinc-100 border-zinc-200 h-20"
 						placeholder='Enter any comments or special requests'
 					/>

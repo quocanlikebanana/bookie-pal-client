@@ -66,7 +66,7 @@ const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
 				<Button onClick={() => navigate(paths.stores.in(store.id).ROOT)} variant="outline" size="sm">
 					View Details
 				</Button>
-				<Button onClick={() => navigate(paths.stores.in(store.id).BOOK)} size="sm">
+				<Button onClick={() => navigate(paths.stores.in(store.id).BOOKING)} size="sm">
 					Book
 					<ChevronRight className="h-4 w-4 ml-1" />
 				</Button>

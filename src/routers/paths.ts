@@ -4,7 +4,7 @@ const paths = {
 		ROOT: '/stores',
 		in: (storeId: string | number = ":storeId") => ({
 			ROOT: `/stores/${storeId}`,
-			BOOK: `/stores/${storeId}/book`,
+			BOOKING: `/stores/${storeId}/booking`,
 		}),
 	},
 	auth: {

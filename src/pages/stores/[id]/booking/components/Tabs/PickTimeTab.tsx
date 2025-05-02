@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import TimeUtil, { Time } from '@/global/models/timeUtil';
-import CalendarGrid from '../common/CalendarGrid';
+import CalendarGrid from '../../../../../../components/common/CalendarGrid';
 import { useBookingTabContext } from '../../context/booking-tab.context';
-import { useBookingDataContext } from '../../context/booking-data.context';
 import { useGetTeamsByTeamIdAvailabilityQuery } from '@/features/booking/apis/booking.api-gen';
 import { format } from 'date-fns';
+import bookingSlice from '@/features/booking/stores/booking/bookingSlice';
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 
 const PickTimeTab: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const team = useAppSelector(bookingSlice.selectors.selectTeam);
+	const service = useAppSelector(bookingSlice.selectors.selectService);
+
 	const { setCurrentTab } = useBookingTabContext();
-	const {
-		service,
-		team,
-		setStartTime,
-	} = useBookingDataContext();
 
 	const now = new Date();
 	const [selectedDate, setSelectedDate] = useState<number>(now.getDate());
@@ -38,7 +38,7 @@ const PickTimeTab: React.FC = () => {
 
 	const handleTimeSlotClick = (time: Time) => {
 		const startTime = new Date(currentDateStart.getFullYear(), currentDateStart.getMonth(), currentDateStart.getDate(), time.hour, time.minute, 0, 0);
-		setStartTime(startTime);
+		dispatch(bookingSlice.actions.setStartTime(startTime));
 		setCurrentTab("fillForm");
 	}
 

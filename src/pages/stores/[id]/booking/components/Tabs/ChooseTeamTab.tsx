@@ -1,17 +1,14 @@
-import { useBookingDataContext } from "../../context/booking-data.context";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import ProfileCard from "../common/ProfileCard";
-import { useGetServicesByServiceIdTeamsQuery } from "@/features/booking/apis/booking.api-gen";
+import bookingSelectors from "@/features/booking/stores/booking/booking.selectors";
+import { useBookingTabContext } from "../../context/booking-tab.context";
+import bookingSlice from "@/features/booking/stores/booking/bookingSlice";
 
 const ChooseTeamTab: React.FC = () => {
-	const { service } = useBookingDataContext();
-	const { data: teams } = useGetServicesByServiceIdTeamsQuery({
-		serviceId: service?.id || "",
-	}, {
-		skip: service == null,
-		refetchOnMountOrArgChange: true,
-	})
+	const teams = useAppSelector(bookingSelectors.selectCurrentTeamsOfService);
+	const dispatch = useAppDispatch();
 
-	if (!teams) return null;
+	const { setCurrentTab } = useBookingTabContext();
 
 	return (
 		<div className="p-6 rounded-lg">
@@ -20,6 +17,10 @@ const ChooseTeamTab: React.FC = () => {
 					<ProfileCard
 						key={team.id}
 						team={team}
+						onClick={() => {
+							dispatch(bookingSlice.actions.setTeam(team));
+							setCurrentTab("pickTime");
+						}}
 					/>
 				))}
 			</div>

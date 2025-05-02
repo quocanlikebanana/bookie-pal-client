@@ -629,7 +629,7 @@ export type Service = {
   /** Id of the service */
   id: Id;
   /** Id of the store */
-  storeId?: Id;
+  storeId: Id;
   /** Name of the service */
   name: string;
   /** Description of the service */

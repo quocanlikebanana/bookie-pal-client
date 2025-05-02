@@ -3,11 +3,11 @@ import StoresPage from "@/pages/stores/index/page";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import { paths } from "./paths";
 import StoreBookPage from "@/pages/stores/[id]/booking/page";
-import StoreLayout from "@/pages/stores/[id]/StoreLayout";
 import Layout from "@/pages/layout";
 import AuthLayout from "@/pages/auth/layout";
 import AuthLoginPage from "@/pages/auth/login/page";
 import AuthRegisterPage from "@/pages/auth/register/page";
+import StoreLayout from "@/pages/stores/[id]/layout";
 
 export default function Router() {
 	return (
@@ -19,6 +19,7 @@ export default function Router() {
 						element={<Navigate to={paths.stores.ROOT} />}
 					/>
 
+					{/* Auth Routes */}
 					<Route
 						path={paths.auth.ROOT}
 						element={<AuthLayout />}
@@ -33,7 +34,7 @@ export default function Router() {
 						/>
 					</Route>
 
-
+					{/* Store Routes */}
 					<Route path={paths.stores.ROOT}>
 						<Route
 							index
@@ -48,7 +49,7 @@ export default function Router() {
 								element={<StorePage />}
 							/>
 							<Route
-								path={paths.stores.in().BOOK}
+								path={paths.stores.in().BOOKING}
 								element={<StoreBookPage />}
 							/>
 						</Route>

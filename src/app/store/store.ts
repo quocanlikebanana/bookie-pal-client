@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { bookingApi } from '@/features/booking/apis/booking.api';
 import { profileApi } from '@/features/profile/apis/profile.api';
 import profileSlice, { ProfileState } from '@/features/profile/stores/profileSlice';
-import bookingSlice from '@/features/booking/stores/bookingSlice';
+import bookingSlice from '@/features/booking/stores/booking/bookingSlice';
 import storeSlice from '@/features/booking/stores/storeSlice';
 import { persistReducer, PersistConfig, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';

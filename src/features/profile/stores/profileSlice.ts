@@ -31,6 +31,7 @@ const profileSlice = createSlice({
 		selectIsVerified: (state: ProfileState) => state.isVerified,
 		selectTokens: (state: ProfileState) => state.token,
 		selectUser: (state: ProfileState) => state.user,
+		selectIsAuthenticated: (state: ProfileState) => state.isVerified && state.token !== null && state.user !== null,
 	},
 	reducers: {
 		logout: (state) => {

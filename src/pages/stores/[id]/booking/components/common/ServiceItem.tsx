@@ -1,25 +1,19 @@
 import TimeUtil from '@/global/models/timeUtil'
 import { ChevronRight } from 'lucide-react'
-import { useBookingDataContext } from '../../context/booking-data.context'
-import { useBookingTabContext } from '../../context/booking-tab.context'
 import { Service } from '@/features/booking/apis/booking.api-gen'
 
 export default function ServiceItem({
-	service
+	service,
+	onClicked,
 }: {
-	service: Service
+	service: Service;
+	onClicked: () => void;
 }) {
-	const { setService } = useBookingDataContext();
-	const { setCurrentTab } = useBookingTabContext();
-
 	return (
 		<div
 			key={service.id}
 			className="flex items-center justify-between px-4 py-3 border border-gray-300 rounded-lg mb-3 cursor-pointer hover:bg-gray-200"
-			onClick={() => {
-				setService(service);
-				setCurrentTab("chooseTeam");
-			}}
+			onClick={onClicked}
 		>
 			<div className="flex items-center">
 				<div className="rounded-md w-12 h-12 flex items-center justify-center mr-4">
