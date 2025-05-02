@@ -10,6 +10,7 @@ interface BookingState {
 	startTime: string;
 	customer: BookingCustomer;
 	comment: string;
+	isInitialized: boolean;
 }
 
 const initialState: BookingState = {
@@ -25,14 +26,21 @@ const initialState: BookingState = {
 		avatar: '',
 	},
 	comment: '',
+	isInitialized: false,
 };
 
 const bookingSlice = createSlice({
 	name: 'booking',
 	initialState,
 	reducers: {
-		setStore: (state, action: PayloadAction<Store>) => {
+		initialize: (state, action: PayloadAction<Store>) => {
 			state.store = action.payload;
+			state.service = null;
+			state.team = null;
+			state.startTime = new Date().toString();
+			state.customer = initialState.customer;
+			state.comment = initialState.comment;
+			state.isInitialized = true;
 		},
 		setService: (state, action: PayloadAction<Service>) => {
 			state.service = action.payload;
@@ -41,8 +49,8 @@ const bookingSlice = createSlice({
 		setTeam: (state, action: PayloadAction<Team>) => {
 			state.team = action.payload;
 		},
-		setStartTime: (state, action: PayloadAction<Date>) => {
-			state.startTime = action.payload.toString();
+		setStartTime: (state, action: PayloadAction<string>) => {
+			state.startTime = action.payload;
 		},
 		setCustomer: (state, action: PayloadAction<BookingCustomer>) => {
 			state.customer = action.payload;

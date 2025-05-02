@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import { paths } from "@/routers/paths";
 import { faker } from "@faker-js/faker";
 import { generateMockRating, generateMockTotalReviews } from "@/mocks/stores";
-import { StoreUtil } from "@/global/models/storeUtil";
+import { StoreUtil } from "@/app/models/storeUtil";
 import { Store } from "@/features/booking/apis/booking.api-gen";
 
 interface StoreCardProps {

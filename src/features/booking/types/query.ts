@@ -1,4 +1,4 @@
-import { Time } from "@/global/models/timeUtil";
+import { Time } from "@/app/models/timeUtil";
 import { Store as APIStore } from "../apis/booking.api-gen";
 
 export interface Store extends APIStore {

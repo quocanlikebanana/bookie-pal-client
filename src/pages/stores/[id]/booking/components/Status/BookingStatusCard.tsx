@@ -1,21 +1,18 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Pencil } from 'lucide-react';
-import { useBookingDataContext } from '../../context/booking-data.context';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router';
 import { paths } from '@/routers/paths';
 import useGetStoreIdFromParams from '@/features/booking/hooks/useGetStoreIdFromParams';
+import { useAppSelector } from '@/app/store/hooks';
+import bookingSelectors from '@/features/booking/stores/booking/booking.selectors';
 
 const BookingStatusCard: React.FC = () => {
 	const navigate = useNavigate();
 	const storeId = useGetStoreIdFromParams();
-	const {
-		service,
-		team,
-		startTime,
-	} = useBookingDataContext();
+	const { startTime, service, team } = useAppSelector(bookingSelectors.selectBookingState);
 
 	const endTime = startTime ? new Date(startTime.getTime() + (service?.duration || 0) * 60000) : null;
 

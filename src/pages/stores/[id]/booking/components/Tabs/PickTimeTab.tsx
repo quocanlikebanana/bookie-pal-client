@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import TimeUtil, { Time } from '@/global/models/timeUtil';
+import TimeUtil, { Time } from '@/app/models/timeUtil';
 import CalendarGrid from '../../../../../../components/common/CalendarGrid';
 import { useBookingTabContext } from '../../context/booking-tab.context';
 import { useGetTeamsByTeamIdAvailabilityQuery } from '@/features/booking/apis/booking.api-gen';
@@ -38,7 +38,7 @@ const PickTimeTab: React.FC = () => {
 
 	const handleTimeSlotClick = (time: Time) => {
 		const startTime = new Date(currentDateStart.getFullYear(), currentDateStart.getMonth(), currentDateStart.getDate(), time.hour, time.minute, 0, 0);
-		dispatch(bookingSlice.actions.setStartTime(startTime));
+		dispatch(bookingSlice.actions.setStartTime(startTime.toISOString()));
 		setCurrentTab("fillForm");
 	}
 
@@ -104,6 +104,7 @@ const PickTimeTab: React.FC = () => {
 						<div className="grid grid-cols-2 gap-2">
 							{times.map((time) => (
 								<Button
+									key={TimeUtil.toString(time)}
 									variant="outline"
 									className="w-full min-h-fit text-center justify-center font-normal hover:bg-gray-100"
 									onClick={() => handleTimeSlotClick(time)}

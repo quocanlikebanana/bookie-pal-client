@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { EMPTY_STORE } from '@/global/models/storeUtil';
+import { EMPTY_STORE } from '@/app/models/storeUtil';
 import { Pagination, Service, Store } from '../apis/booking.api-gen';
 
 interface StoreState {
@@ -26,8 +26,8 @@ const storeSlice = createSlice({
 		},
 	},
 	selectors: {
-		getStore: (state: StoreState): Store => state.currentData?.store || EMPTY_STORE,
-		getServices: (state: StoreState): Service[] => state.currentData?.services || [],
+		selectStore: (state: StoreState): Store => state.currentData?.store || EMPTY_STORE,
+		selectServices: (state: StoreState): Service[] => state.currentData?.services || [],
 	},
 });
 

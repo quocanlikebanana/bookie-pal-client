@@ -10,7 +10,7 @@ import bookingSlice from "@/features/booking/stores/booking/bookingSlice";
 
 const ChooseServiceTab: React.FC = () => {
 	const dispatch = useAppDispatch();
-	const services = useAppSelector(storeSlice.selectors.getServices);
+	const services = useAppSelector(storeSlice.selectors.selectServices);
 
 	const { setCurrentTab } = useBookingTabContext();
 	const [isMainExpanded, setIsMainExpanded] = useState(true);

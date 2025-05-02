@@ -1,25 +1,33 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { bookingApi } from '@/features/booking/apis/booking.api';
 import { profileApi } from '@/features/profile/apis/profile.api';
-import profileSlice, { ProfileState } from '@/features/profile/stores/profileSlice';
+import profileSlice from '@/features/profile/stores/profileSlice';
 import bookingSlice from '@/features/booking/stores/booking/bookingSlice';
 import storeSlice from '@/features/booking/stores/storeSlice';
-import { persistReducer, PersistConfig, persistStore } from 'redux-persist';
+import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-const authPersistConfig: PersistConfig<ProfileState> = {
-	key: 'profile',
+const persistedProfileReducer = persistReducer({
+	key: profileSlice.name,
 	storage,
 	whitelist: ['user', 'token']
-};
+}, profileSlice.reducer);
 
-const persistedProfileReducer = persistReducer(authPersistConfig, profileSlice.reducer);
+const persistedBookingReducer = persistReducer({
+	key: bookingSlice.name,
+	storage,
+}, bookingSlice.reducer);
+
+const persistedStoreReducer = persistReducer({
+	key: storeSlice.name,
+	storage,
+}, storeSlice.reducer);
 
 const store = configureStore({
 	reducer: {
 		[profileSlice.reducerPath]: persistedProfileReducer,
-		[bookingSlice.reducerPath]: bookingSlice.reducer,
-		[storeSlice.reducerPath]: storeSlice.reducer,
+		[bookingSlice.reducerPath]: persistedBookingReducer,
+		[storeSlice.reducerPath]: persistedStoreReducer,
 
 		// API reducers
 		[bookingApi.reducerPath]: bookingApi.reducer,

@@ -1,10 +1,10 @@
 import { useAppSelector } from '@/app/store/hooks';
 import { Card, CardContent } from '@/components/ui/card'
-import storeSlice from '@/features/booking/stores/storeSlice';
+import bookingSlice from '@/features/booking/stores/booking/bookingSlice';
 import { faker } from '@faker-js/faker';
 
 export default function StoreInfoCard() {
-	const store = useAppSelector(storeSlice.selectors.getStore);
+	const store = useAppSelector(bookingSlice.selectors.selectStore);
 	if (!store) return null;
 	return (
 		<Card className="w-full max-w-md rounded-lg shadow-md overflow-hidden border-0 bg-gray-100">

@@ -101,7 +101,9 @@ class TimeUtil {
 	}
 
 	static reduceOverlappingTimeRanges = (ranges: TimeRange[]): TimeRange[] => {
-		ranges.sort((a, b) => {
+		console.log("Original ranges:", ranges);
+		const copyRanges = JSON.parse(JSON.stringify(ranges)) as TimeRange[];
+		copyRanges.sort((a, b) => {
 			const startA = a.start.hour * 60 + a.start.minute;
 			const startB = b.start.hour * 60 + b.start.minute;
 			return startA - startB;
@@ -109,7 +111,7 @@ class TimeUtil {
 
 		const reducedRanges: TimeRange[] = [];
 
-		ranges.forEach(range => {
+		copyRanges.forEach(range => {
 			if (reducedRanges.length === 0) {
 				reducedRanges.push(range);
 			} else {

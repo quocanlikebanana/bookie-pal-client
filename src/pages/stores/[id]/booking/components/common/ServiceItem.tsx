@@ -1,4 +1,4 @@
-import TimeUtil from '@/global/models/timeUtil'
+import TimeUtil from '@/app/models/timeUtil'
 import { ChevronRight } from 'lucide-react'
 import { Service } from '@/features/booking/apis/booking.api-gen'
 

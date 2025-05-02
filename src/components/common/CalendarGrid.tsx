@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import TimeUtil from "@/global/models/timeUtil";
+import TimeUtil from "@/app/models/timeUtil";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const monthNames = [

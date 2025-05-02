@@ -15,7 +15,7 @@ const StorePage: React.FC = () => {
 	const navigate = useNavigate();
 	const tabs = ["Services", "Classes", "Team", "Reviews"];
 	const [activeTab, setActiveTab] = useState("Services");
-	const store = useAppSelector(storeSlice.selectors.getStore);
+	const store = useAppSelector(storeSlice.selectors.selectStore);
 
 	return (
 		<div className="flex flex-col min-h-screen bg-gray-50">
