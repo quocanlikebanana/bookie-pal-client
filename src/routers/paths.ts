@@ -12,6 +12,11 @@ const paths = {
 		LOGIN: '/auth/login/',
 		REGISTER: '/auth/register/'
 	},
+	dashboard: {
+		ROOT: '/dashboard',
+		BOOKINGS: '/dashboard/bookings',
+		HISTORY: '/dashboard/history'
+	},
 }
 
 export { paths };

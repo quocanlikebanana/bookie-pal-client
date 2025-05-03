@@ -11,7 +11,7 @@ interface RouteGuardProps {
 	redirectTo?: string;
 }
 
-const RouteGuard = ({
+const RoleGuard = ({
 	children,
 	requiredRole,
 	redirectTo = paths.auth.LOGIN,
@@ -46,4 +46,4 @@ const RouteGuard = ({
 	</>
 };
 
-export default RouteGuard;
+export default RoleGuard;

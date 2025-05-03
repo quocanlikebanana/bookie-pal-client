@@ -1,3 +1,4 @@
+import { env } from '@/app/env';
 import { useAppSelector } from '@/app/store/hooks';
 import { Card, CardContent } from '@/components/ui/card'
 import bookingSlice from '@/features/booking/stores/booking/bookingSlice';
@@ -16,7 +17,7 @@ export default function StoreInfoCard() {
 				</p>
 				<div className="mt-4 flex justify-center items-center">
 					<img
-						src={"https://cdn-icons-png.flaticon.com/512/4320/4320289.png"}
+						src={store.avatar || env.defaultValues.store.avatar}
 						alt={store.name}
 						className="w-16 h-16 rounded-full"
 					/>

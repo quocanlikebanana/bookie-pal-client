@@ -8,6 +8,9 @@ import AuthLayout from "@/pages/auth/layout";
 import AuthLoginPage from "@/pages/auth/login/page";
 import AuthRegisterPage from "@/pages/auth/register/page";
 import StoreLayout from "@/pages/stores/[id]/layout";
+import DashboardLayout from "@/pages/dashboard/layout";
+import BookingsPage from "@/pages/dashboard/bookings/page";
+import HistoryPage from "@/pages/dashboard/history/page";
 
 export default function Router() {
 	return (
@@ -53,6 +56,25 @@ export default function Router() {
 								element={<StoreBookPage />}
 							/>
 						</Route>
+					</Route>
+
+					{/* Dashboard Routes */}
+					<Route
+						path={paths.dashboard.ROOT}
+						element={<DashboardLayout />}
+					>
+						<Route
+							index
+							element={<Navigate to={paths.dashboard.BOOKINGS} />}
+						/>
+						<Route
+							path={paths.dashboard.BOOKINGS}
+							element={<BookingsPage />}
+						/>
+						<Route
+							path={paths.dashboard.HISTORY}
+							element={<HistoryPage />}
+						/>
 					</Route>
 				</Route>
 			</Routes>

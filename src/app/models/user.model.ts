@@ -11,3 +11,8 @@ export const EMPTY_USER: User = {
 	createdAt: new Date().toString(),
 	updatedAt: new Date().toString(),
 }
+
+export enum UserRole {
+	CLIENT = 1,
+	CMS = 2,
+}
