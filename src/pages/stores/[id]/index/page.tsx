@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import BusinessHours from "./components/BusinessHours";
-import Services from "./components/Tabs/Services";
-import Classes from "./components/Tabs/Classes";
-import Team from "./components/Tabs/Team";
-import Reviews from "./components/Tabs/Reviews";
+import Services from "./components/Tabs/ServicesTab";
+import Classes from "./components/Tabs/ClassesTab";
+import TeamTab from "./components/Tabs/TeamsTab";
+import Reviews from "./components/Tabs/ReviewsTab";
 import { useNavigate } from "react-router";
 import { paths } from "@/routers/paths";
 import { useAppSelector } from "@/app/store/hooks";
@@ -63,7 +63,7 @@ const StorePage: React.FC = () => {
 
 						{activeTab === "Classes" && <Classes />}
 
-						{activeTab === "Team" && <Team />}
+						{activeTab === "Team" && <TeamTab />}
 
 						{activeTab === "Reviews" && <Reviews />}
 					</div>

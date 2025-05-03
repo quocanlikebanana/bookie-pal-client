@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CreateCustomer, PostStoresByStoreIdBookApiArg, Service, Store, Team } from '../../apis/booking.api-gen';
+import { UserAuth } from '@/features/profile/apis/profile.api-gen';
+import { EMPTY_USER } from '@/app/models/user.model';
 
 type BookingCustomer = Omit<CreateCustomer, "storeId">;
 
@@ -33,18 +35,21 @@ const bookingSlice = createSlice({
 	name: 'booking',
 	initialState,
 	reducers: {
-		initialize: (state, action: PayloadAction<Store>) => {
-			state.store = action.payload;
+		initialize: (state, action: PayloadAction<{
+			store: Store;
+			user: UserAuth | null;
+		}>) => {
+			state.store = action.payload.store;
 			state.service = null;
 			state.team = null;
 			state.startTime = new Date().toString();
-			state.customer = initialState.customer;
+			state.customer = action.payload.user || EMPTY_USER;
 			state.comment = initialState.comment;
 			state.isInitialized = true;
 		},
 		setService: (state, action: PayloadAction<Service>) => {
 			state.service = action.payload;
-			state.team = null; // Reset selected team when service changes
+			state.team = null;
 		},
 		setTeam: (state, action: PayloadAction<Team>) => {
 			state.team = action.payload;
@@ -59,7 +64,7 @@ const bookingSlice = createSlice({
 			state.comment = action.payload;
 		},
 		clearBookingData: () => {
-			return initialState; // Reset to initial state
+			return initialState;
 		},
 	},
 	selectors: {

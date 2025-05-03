@@ -1,11 +1,11 @@
-import useGetStoreIdFromParams from '../../../../../features/booking/hooks/useGetStoreIdFromParams'
+import useGetStoreId from '../../../../../features/booking/hooks/useGetStoreId'
 import { useGetStoresByStoreIdQuery, useGetStoresByStoreIdServicesQuery } from '../../../../../features/booking/apis/booking.api-gen';
 import { useAppDispatch } from '@/app/store/hooks';
 import { useEffect } from 'react';
 import storeSlice from '@/features/booking/stores/storeSlice';
 
 export default function useLoadStore() {
-	const storeId = useGetStoreIdFromParams();
+	const storeId = useGetStoreId();
 	const storeQuery = useGetStoresByStoreIdQuery({
 		storeId
 	}, {

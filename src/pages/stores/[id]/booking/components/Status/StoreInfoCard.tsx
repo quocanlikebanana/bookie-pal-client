@@ -1,7 +1,6 @@
 import { useAppSelector } from '@/app/store/hooks';
 import { Card, CardContent } from '@/components/ui/card'
 import bookingSlice from '@/features/booking/stores/booking/bookingSlice';
-import { faker } from '@faker-js/faker';
 
 export default function StoreInfoCard() {
 	const store = useAppSelector(bookingSlice.selectors.selectStore);
@@ -16,7 +15,11 @@ export default function StoreInfoCard() {
 					{store.industry}
 				</p>
 				<div className="mt-4 flex justify-center items-center">
-					<img src={faker.image.personPortrait()} alt={store.name} className="w-16 h-16 rounded-full" />
+					<img
+						src={"https://cdn-icons-png.flaticon.com/512/4320/4320289.png"}
+						alt={store.name}
+						className="w-16 h-16 rounded-full"
+					/>
 				</div>
 			</CardContent>
 		</Card>

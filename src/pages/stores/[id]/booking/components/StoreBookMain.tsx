@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router";
 import { paths } from "@/routers/paths";
-import useGetStoreIdFromParams from "@/features/booking/hooks/useGetStoreIdFromParams";
+import useGetStoreId from "@/features/booking/hooks/useGetStoreId";
 import ChooseServiceTab from "./Tabs/ChooseServiceTab";
 import { Tab, useBookingTabContext } from "../context/booking-tab.context";
 import ChooseTeamTab from "./Tabs/ChooseTeamTab";
@@ -14,7 +14,7 @@ import BookedTab from "./Tabs/BookedTab";
 
 const StoreBookMain: React.FC = () => {
 	const navigate = useNavigate();
-	const storeId = useGetStoreIdFromParams();
+	const storeId = useGetStoreId();
 	const {
 		currentTab,
 		setCurrentTab,

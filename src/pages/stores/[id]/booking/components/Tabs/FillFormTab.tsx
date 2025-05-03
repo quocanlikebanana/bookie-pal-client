@@ -14,7 +14,6 @@ import {
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { usePostStoresByStoreIdBookMutation } from '@/features/booking/apis/booking.api-gen';
 import { useBookingTabContext } from '../../context/booking-tab.context';
-import { profileSelectors } from '@/features/profile/stores/profileSlice';
 import bookingSlice from '@/features/booking/stores/booking/bookingSlice';
 
 // TODO: Country codes
@@ -26,7 +25,7 @@ const FillFormTab: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const customer = useAppSelector(bookingSlice.selectors.selectCustomer);
 	const comment = useAppSelector(bookingSlice.selectors.selectComment);
-	const isAuthenticated = useAppSelector(profileSelectors.selectIsAuthenticated);
+	const bookData = useAppSelector(bookingSlice.selectors.selectBookingData);
 
 	const { setCurrentTab } = useBookingTabContext();
 
@@ -35,6 +34,7 @@ const FillFormTab: React.FC = () => {
 	useEffect(() => {
 		if (isSuccess) {
 			setCurrentTab("booked");
+			dispatch(bookingSlice.actions.clearBookingData());
 		}
 	}, [isSuccess]);
 
@@ -47,7 +47,6 @@ const FillFormTab: React.FC = () => {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		const bookData = useAppSelector(bookingSlice.selectors.selectBookingData);
 		// TODO: Validate booking data (show errors)
 		if (!bookData) return;
 		book(bookData);
@@ -63,7 +62,6 @@ const FillFormTab: React.FC = () => {
 					</Label>
 					<Input
 						id="fullName"
-						disabled={isAuthenticated}
 						value={customer.name}
 						onChange={(e) => handleCustomerInfoChange("name", e.target.value)}
 						className="bg-zinc-100 border-zinc-200"
@@ -80,7 +78,6 @@ const FillFormTab: React.FC = () => {
 					<div className="flex gap-2">
 						{/* TODO: Phone zone code */}
 						<Select
-							disabled={isAuthenticated}
 							defaultValue='+1'
 						>
 							<SelectTrigger className="w-24 bg-zinc-100 border-zinc-200">
@@ -94,7 +91,6 @@ const FillFormTab: React.FC = () => {
 						</Select>
 						<Input
 							id="phoneNumber"
-							disabled={isAuthenticated}
 							value={customer.phone}
 							onChange={(e) => handleCustomerInfoChange('phone', e.target.value)}
 							className="flex-1 bg-zinc-100 border-zinc-200"
@@ -111,7 +107,6 @@ const FillFormTab: React.FC = () => {
 					</Label>
 					<Input
 						id="email"
-						disabled={isAuthenticated}
 						type="email"
 						value={customer.email}
 						onChange={(e) => handleCustomerInfoChange('email', e.target.value)}

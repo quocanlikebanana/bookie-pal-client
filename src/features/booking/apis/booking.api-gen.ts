@@ -605,6 +605,8 @@ export type Store = {
   phone: string;
   /** Timezone of the store */
   timezone: string;
+  /** Avatar of the store */
+  avatar?: string;
   workHours: WorkHoursInWeek;
 };
 export type Availability = TimeRange[][];
@@ -640,6 +642,8 @@ export type Service = {
   members: Team[];
   /** Category of the service */
   category: string;
+  /** Avatar of the service */
+  avatar?: string;
 };
 export type CreateCustomer = {
   /** Id of the customer account. This is optional and can be null if the customer is anonymous. */

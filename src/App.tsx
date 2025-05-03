@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "./app/store/hooks";
 import { profileActions, profileSelectors } from "./features/profile/stores/profileSlice";
 import Router from "./routers/Router";
 import { usePostRefreshMutation } from "./features/profile/apis/profile.api-gen";
+import "./app/css/CollapsibleContent.css";
 
 function App() {
 	const isVerified = useAppSelector(profileSelectors.selectIsVerified);

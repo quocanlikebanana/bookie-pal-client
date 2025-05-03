@@ -1,15 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { PostLoginApiResponse, profileGenApi, Role } from '../apis/profile.api-gen';
+import { PostLoginApiResponse, profileGenApi } from '../apis/profile.api-gen';
+import { UserAuth } from '@/features/profile/apis/profile.api-gen';
 
 export interface ProfileState {
-	user: {
-		accountId: string;
-		role: Role;
-		name: string;
-		phone: string;
-		email: string;
-		avatar?: string;
-	} | null;
+	user: UserAuth | null;
 	token: {
 		accessToken: string;
 		refreshToken: string;

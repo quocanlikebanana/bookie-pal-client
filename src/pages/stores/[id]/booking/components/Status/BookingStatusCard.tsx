@@ -5,19 +5,29 @@ import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router';
 import { paths } from '@/routers/paths';
-import useGetStoreIdFromParams from '@/features/booking/hooks/useGetStoreIdFromParams';
-import { useAppSelector } from '@/app/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import bookingSelectors from '@/features/booking/stores/booking/booking.selectors';
+import bookingSlice from '@/features/booking/stores/booking/bookingSlice';
 
 const BookingStatusCard: React.FC = () => {
 	const navigate = useNavigate();
-	const storeId = useGetStoreIdFromParams();
-	const { startTime, service, team } = useAppSelector(bookingSelectors.selectBookingState);
+	const dispatch = useAppDispatch();
+	const {
+		store,
+		startTime,
+		service,
+		team
+	} = useAppSelector(bookingSelectors.selectBookingState);
 
 	const endTime = startTime ? new Date(startTime.getTime() + (service?.duration || 0) * 60000) : null;
 
 	const handleOnCancel = () => {
-		navigate(paths.stores.in(storeId).ROOT);
+		dispatch(bookingSlice.actions.clearBookingData());
+		if (!store) {
+			navigate(paths.stores.ROOT);
+		} else {
+			navigate(paths.stores.in(store.id).ROOT);
+		}
 	}
 
 	return (
